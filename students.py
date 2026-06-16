@@ -1,147 +1,177 @@
 class Student:
-    def __init__(self, name, student_id, age, marks):
+
+    def __init__(self, student_id, name, age, marks):
+        self.student_id = student_id
         self.name = name
-        self.id = student_id
         self.age = age
         self.marks = marks
 
     def display(self):
-        print("-" * 30)
-        print("Name :", self.name)
-        print("ID   :", self.id)
-        print("Age  :", self.age)
-        print("Marks:", self.marks)
+        print("\nStudent ID :", self.student_id)
+        print("Name       :", self.name)
+        print("Age        :", self.age)
+        print("Marks      :", self.marks)
 
 
 class StudentManagementSystem:
+
     def __init__(self):
         self.students = []
+        
 
-    def add_student(self, name, student_id, age, marks):
-        # Check for duplicate ID
-        for student in self.students:
-            if student.id == student_id:
-                print(f"Student with ID {student_id} already exists!")
-                return
+   # Add Multiple Students
+    def add_student(self):
 
-        self.students.append(Student(name, student_id, age, marks))
-        print("Student added successfully!")
+        n = int(input("How many students do you want to add? : "))
 
-    def display_students(self):
-        if not self.students:
-            print("No students found.")
-            return
+        for i in range(n):
 
-        for student in self.students:
-            student.display()
+            print(f"\nEnter Details of Student {i+1}")
 
-    def search_by_name(self, name):
-        found = False
+            while True:
+                student_id = int(input("Enter Student ID : "))
 
-        for student in self.students:
-            if student.name.lower() == name.lower():
+            # Check duplicate ID
+                is_duplicate = False
+
+                for student in self.students:
+                    if student.student_id == student_id:
+                        is_duplicate = True
+                        break
+
+                if is_duplicate:
+                    print("Student ID already exists! Enter a different ID.")
+                else:
+                    break
+
+            name = input("Enter Student Name : ")
+            age = int(input("Enter Age : "))
+            marks = float(input("Enter Marks : "))
+
+            student = Student(student_id, name, age, marks)
+
+            self.students.append(student)
+
+        print(f"\n{n} Students Added Successfully!")
+
+    # View Students
+    def view_students(self):
+
+        if len(self.students) == 0:
+            print("No Students Found!")
+
+        else:
+            print("\n----- Student Details -----")
+
+            for student in self.students:
                 student.display()
-                found = True
 
-        if not found:
-            print("Student not found.")
+    # Search Student
+    def search_student(self):
 
-    def search_by_id(self, student_id):
+        student_id = int(input("Enter Student ID to Search : "))
+
         for student in self.students:
-            if student.id == student_id:
+
+            if student.student_id == student_id:
+
+                print("\nStudent Found!")
                 student.display()
                 return
 
-        print("Student not found.")
+        print("Student Not Found!")
 
-    def update_student(self, student_id, age, marks):
+    # Update Marks
+    def update_marks(self):
+
+        student_id = int(input("Enter Student ID : "))
+
         for student in self.students:
-            if student.id == student_id:
-                student.age = age
-                student.marks = marks
-                print("Student updated successfully!")
+
+            if student.student_id == student_id:
+
+                new_marks = float(input("Enter New Marks : "))
+                student.marks = new_marks
+
+                print("Marks Updated Successfully!")
                 return
 
-        print("Student not found.")
+        print("Student Not Found!")
 
-    def delete_student(self, student_id):
+    # Delete Student
+    def delete_student(self):
+
+        student_id = int(input("Enter Student ID : "))
+
         for student in self.students:
-            if student.id == student_id:
+
+            if student.student_id == student_id:
+
                 self.students.remove(student)
-                print("Student deleted successfully!")
+
+                print("Student Deleted Successfully!")
                 return
 
-        print("Student not found.")
+        print("Student Not Found!")
 
-    def highest_marks(self):
-        if not self.students:
-            print("No students available.")
-            return
+    # Display Topper
+    def display_topper(self):
 
-        highest_student = max(self.students, key=lambda s: s.marks)
+        if len(self.students) == 0:
+            print("No Students Available!")
 
-        print("\nStudent with Highest Marks:")
-        highest_student.display()
+        else:
 
-    def exit_system(self):
-        print("Thank you for using the Student Management System!")
+            topper = self.students[0]
 
+            for student in self.students:
+
+                if student.marks > topper.marks:
+                    topper = student
+
+            print("\n----- Topper Details -----")
+            topper.display()
+
+
+# Main Program
 
 sms = StudentManagementSystem()
 
 while True:
-    print("\n===== STUDENT MANAGEMENT SYSTEM =====")
-    print("1. Add Student")
-    print("2. Display Students")
-    print("3. Search Student by Name")
-    print("4. Search Student by ID")
-    print("5. Update Student")
-    print("6. Delete Student")
-    print("7. Highest Marks")
-    print("8. Exit")
 
-    try:
-        choice = int(input("Enter your choice: "))
-    except ValueError:
-        print("Please enter a valid number.")
-        continue
+    print("\n===== STUDENT MANAGEMENT SYSTEM =====")
+    print("1. Add Students")
+    print("2. View Students")
+    print("3. Search Student")
+    print("4. Update Marks")
+    print("5. Delete Student")
+    print("6. Display Topper")
+    print("7. Exit")
+
+    choice = int(input("Enter Your Choice : "))
 
     if choice == 1:
-        name = input("Enter Name: ").strip()
-        student_id = int(input("Enter ID: "))
-        age = int(input("Enter Age: "))
-        marks = float(input("Enter Marks: "))
-
-        sms.add_student(name, student_id, age, marks)
+        sms.add_student()
 
     elif choice == 2:
-        sms.display_students()
+        sms.view_students()
 
     elif choice == 3:
-        name = input("Enter Name to Search: ")
-        sms.search_by_name(name)
+        sms.search_student()
 
     elif choice == 4:
-        student_id = int(input("Enter ID to Search: "))
-        sms.search_by_id(student_id)
+        sms.update_marks()
 
     elif choice == 5:
-        student_id = int(input("Enter ID to Update: "))
-        age = int(input("Enter New Age: "))
-        marks = float(input("Enter New Marks: "))
-
-        sms.update_student(student_id, age, marks)
+        sms.delete_student()
 
     elif choice == 6:
-        student_id = int(input("Enter ID to Delete: "))
-        sms.delete_student(student_id)
+        sms.display_topper()
 
     elif choice == 7:
-        sms.highest_marks()
-
-    elif choice == 8:
-        sms.exit_system()
+        print("Thank You!")
         break
 
     else:
-        print("Invalid choice. Please try again.")
+        print("Invalid Choice!")
+
